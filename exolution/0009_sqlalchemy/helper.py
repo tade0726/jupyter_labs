@@ -17,6 +17,22 @@ def drop_table(engine,table_name,schema = None):
     
     engine.execute(s)
 
+def drop_schema(engine,schema):
+    s = "DROP SCHEMA IF EXISTS {schema} CASCADE".format(schema = schema)
+    
+    engine.execute(s)
+
+def create_schema(engine, schema):
+    s = "CREATE SCHEMA {schema}".format(schema = schema)
+
+    try:
+        engine.execute(s)    
+    except ProgrammingError as e:
+        if 'already exists' in str(e):
+            pass
+        else:
+            raise e
+
 
 def create_table(engine,table_name,column_configs, schema = None, metadata = None):
     try:
@@ -37,7 +53,7 @@ def create_table(engine,table_name,column_configs, schema = None, metadata = Non
         engine.execute(CreateTable(table))
     except ProgrammingError as e:
         if 'already exists' in str(e):
-            print('Table already exists')
+            pass
         else:
             raise e
 
@@ -61,7 +77,6 @@ def define_tables(engine, table_configs, schema = None):
             tables.append(table)
         except ProgrammingError as e:
             if 'already exists' in str(e):
-                print('Table {}.{} already exists'.format(schema,table_name))
                 tables.append(None)
             else:
                 raise e
@@ -85,18 +100,18 @@ addresses_data = DataFrame.from_records(
     columns = ['user_id','email_address']
 )
 
-def clear_db(engine):
+def clear_tables(engine):
+    drop_table(engine,'users','test')
+    drop_table(engine,'addresses','test')
+
+def clear_schema(engine):
+    drop_schema(engine,'test')
+
+def reset_tables(engine):
     schema = 'test'
-    drop_table(engine,'users',schema)
-    drop_table(engine,'addresses',schema)
 
-
-def reset_db(engine):
-    schema = 'test'
-    drop_table(engine,'users',schema)
-    drop_table(engine,'addresses',schema)
-
-
+    drop_schema(engine,schema)
+    create_schema(engine,schema)
     
     users_column_configs = [
         (['id',Integer],{'primary_key':True}),
@@ -126,10 +141,22 @@ def reset_db(engine):
     
     return users, addresses
 
-def read_table(engine, table):
+def get_table(engine, table):
     d = engine.execute(table.select()).fetchall()
     return DataFrame.from_records(d,columns = table.c.keys())
 
-def read_select(engine, select, **kwargs):
+def get_select(engine, select, **kwargs):
     d = engine.execute(select,**kwargs).fetchall()
-    return DataFrame.from_records(d,columns = select.c.keys())    
+    return DataFrame.from_records(d,columns = select.c.keys())
+
+def print_sql(engine, obj, compile_kwargs = True):
+    if compile_kwargs:
+        compile_kwargs = {'literal_binds':True}
+    else:
+        compile_kwargs = {}
+
+
+    print('***Compiled SQL***')
+    print('<<<')
+    print((obj.compile(engine, compile_kwargs=compile_kwargs)))
+    print('>>>')
