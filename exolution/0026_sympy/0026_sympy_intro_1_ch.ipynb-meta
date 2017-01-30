@@ -1,5 +1,5 @@
-Title: Sympy tutorial I
+Title: Sympy入门教程1
 Date: 2017-01-26
 Modified: 2017-01-26
 Tags: python, Sympy
-Summary: Tutorial fot Sympy, a powerful symbolic package for Python.\n关于Sympy的教程。Sympy是一个Python下功能强大的符号计算库。
+Summary: Sympy是一个Python下功能强大的符号计算库。这篇文章是教程的第一部分，涉及基本的Sympy操作和数学表达式的化简。

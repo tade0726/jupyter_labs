@@ -2,5 +2,4 @@ Title: Sympy tutorial II
 Date: 2017-01-28
 Modified: 2017-01-28
 Tags: python, Sympy
-Summary: Tutorial fot Sympy, a powerful symbolic package for Python. Part II cover derivatives, integrals, limits and series expansion.
-Status:draft
+Summary: Tutorial fot Sympy, a powerful symbolic package for Python. Part II of the tutorial covers calculus and series expansion.
