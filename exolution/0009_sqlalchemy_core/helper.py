@@ -1,4 +1,5 @@
 from sqlalchemy.exc import ProgrammingError
+from sqlalchemy.schema import CreateTable
 from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey, Sequence
 from pandas import DataFrame, Series
 
